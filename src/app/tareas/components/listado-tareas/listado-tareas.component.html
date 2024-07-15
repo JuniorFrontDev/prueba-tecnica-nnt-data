@@ -1,0 +1,25 @@
+<ul class="list-unstyled" *ngIf="listaTareas">
+  <li class="d-flex align-items-center mb-3" *ngFor="let tarea of listaTareas">
+    <div class="me-3">
+      <input
+        class="form-check-input checkbox-tarea"
+        type="checkbox"
+        [checked]="tarea.completado"
+        (change)="completarTarea(tarea.idTarea)"
+      />
+    </div>
+    <span class="text-break flex-grow-1"> {{ tarea.nombreTarea }} </span>
+    <button
+      class="ms-3 fs-6 btn btn-danger"
+      *ngIf="!tarea.completado"
+      type="button"
+      (click)="eliminarTarea(tarea.idTarea)"
+    >
+      x
+    </button>
+  </li>
+</ul>
+
+<div class="text-center fs-5" *ngIf="listaTareas?.length == 0">
+  No hay tareas por mostrar
+</div>

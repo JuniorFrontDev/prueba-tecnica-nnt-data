@@ -1,0 +1,14 @@
+@import "~bootstrap/scss/functions";
+@import "~bootstrap/scss/variables";
+
+@import "~bootstrap/scss/mixins";
+
+.btn-width {
+  width: 100%;
+}
+
+@include media-breakpoint-up(lg) {
+  .btn-width {
+    width: 50%;
+  }
+}

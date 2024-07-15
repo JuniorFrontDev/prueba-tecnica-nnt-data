@@ -1,0 +1,43 @@
+<div class="mt-5 row">
+  <div
+    class="fs-1 text-light"
+    *ngIf="appFacade.usuarioLogeado$ | async as usuarioLogeado"
+  >
+    <span class="fw-bold">Bienvenido:</span> {{ usuarioLogeado.usuario }}
+  </div>
+  <section class="col-12 col-sm-9 col-md-7 mt-5">
+    <h2 class="text-light">LISTA DE TAREAS</h2>
+    <form
+      class="mt-4 d-sm-flex align-items-sm-center"
+      [formGroup]="form"
+      (ngSubmit)="onSubmit()"
+    >
+      <div class="mb-3 mb-sm-0 flex-sm-grow-1">
+        <div class="row">
+          <label class="col-sm-2 col-form-label fw-bold text-light"
+            >Tarea:</label
+          >
+          <div class="col-sm-10">
+            <input
+              class="form-control"
+              type="text"
+              formControlName="nombreTarea"
+              (keypress)="handleKeyPress($event)"
+              (paste)="handlePaste($event)"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="mb-3 mb-sm-0 ms-sm-3">
+        <input class="btn btn-primary w-100" type="submit" value="Agregar" />
+      </div>
+    </form>
+    <div class="my-5 p-5 border rounded bg-light">
+      <app-listado-tareas
+        [listaTareas]="appFacade.listaTareas$ | async"
+        (emitEliminarTarea)="eliminarTarea($event)"
+        (emitCompletarTarea)="completarTarea($event)"
+      ></app-listado-tareas>
+    </div>
+  </section>
+</div>
