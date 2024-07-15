@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { Rutas } from './shared/enums/rutas.enum';
+import { UsuarioGuard } from './shared/guards/usuario.guard';
 
 const routes: Routes = [
   {
@@ -15,6 +16,7 @@ const routes: Routes = [
   },
   {
     path: Rutas.TAREAS,
+    canActivate: [UsuarioGuard],
     loadChildren: () =>
       import('./tareas/tareas.module').then((m) => m.TareasModule),
   },

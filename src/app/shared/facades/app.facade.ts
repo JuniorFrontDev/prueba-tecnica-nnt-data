@@ -13,6 +13,8 @@ import { Observable } from 'rxjs';
 import { Usuario } from '../models/usuario.model';
 import { usuarioSelector } from 'src/app/store/selectors/usuario.selector';
 import { listaTareasSelector } from 'src/app/store/selectors/tarea.selector';
+import { loadState, resetState } from 'src/app/store/actions/app.action';
+import { stateSelector } from 'src/app/store/selectors/state.selector';
 
 @Injectable({
   providedIn: 'root',
@@ -20,10 +22,12 @@ import { listaTareasSelector } from 'src/app/store/selectors/tarea.selector';
 export class AppFacade {
   usuarioLogeado$!: Observable<Usuario | null>;
   listaTareas$!: Observable<Tarea[]>;
+  state$!: Observable<State>;
 
   constructor(private store: Store<State>) {
     this.usuarioLogeado$ = this.store.pipe(select(usuarioSelector));
     this.listaTareas$ = this.store.pipe(select(listaTareasSelector));
+    this.state$ = this.store.pipe(select(stateSelector));
   }
 
   login(usuario: CredencialesLogin): void {
@@ -40,5 +44,13 @@ export class AppFacade {
 
   completarTarea(idTarea: number): void {
     this.store.dispatch(completarTarea({ idTarea }));
+  }
+
+  resetState(): void {
+    this.store.dispatch(resetState());
+  }
+
+  loadState(stateLocalStorage: State): void {
+    this.store.dispatch(loadState({ stateLocalStorage }));
   }
 }

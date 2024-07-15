@@ -5,8 +5,11 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { AppFacade } from 'src/app/shared/facades/app.facade';
 import { Tarea } from 'src/app/shared/models/tarea.model';
+import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
+import { State } from 'src/app/store/state/app.state';
 
 @Component({
   selector: 'app-tareas',
@@ -15,13 +18,23 @@ import { Tarea } from 'src/app/shared/models/tarea.model';
 })
 export class TareasComponent implements OnInit {
   form!: FormGroup;
-
+  state!: State;
   readonly REGEX_ALFANUMERICO = new RegExp('^[A-Za-z0-9 ]+$');
 
-  constructor(private fb: FormBuilder, public appFacade: AppFacade) {}
+  constructor(
+    private fb: FormBuilder,
+    public appFacade: AppFacade,
+    private localStorageService: LocalStorageService
+  ) {}
 
   ngOnInit(): void {
+    this.subscribeToState();
+    this.localStorageService.getState('state');
     this.crearFormulario();
+  }
+
+  subscribeToState(): void {
+    this.appFacade.state$.subscribe((state: State) => (this.state = state));
   }
 
   crearFormulario(): void {
@@ -42,6 +55,7 @@ export class TareasComponent implements OnInit {
         completado: false,
       };
       this.appFacade.agregarTarea(tarea);
+      this.localStorageService.setState(this.state, 'state');
       this.form.reset({ nombreTarea: '' });
     }
   }
@@ -65,9 +79,11 @@ export class TareasComponent implements OnInit {
 
   eliminarTarea(idTarea: number): void {
     this.appFacade.eliminarTarea(idTarea);
+    this.localStorageService.setState(this.state, 'state');
   }
 
   completarTarea(idTarea: number): void {
     this.appFacade.completarTarea(idTarea);
+    this.localStorageService.setState(this.state, 'state');
   }
 }

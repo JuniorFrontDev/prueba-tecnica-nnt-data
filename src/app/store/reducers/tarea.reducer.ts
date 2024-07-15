@@ -6,6 +6,7 @@ import {
 } from '../actions/tarea.action';
 import { Tarea } from 'src/app/shared/models/tarea.model';
 import { initialTareaState, TareaState } from '../state/tarea.state';
+import { loadState, resetState } from '../actions/app.action';
 
 const reducer = createReducer(
   initialTareaState,
@@ -41,6 +42,18 @@ const reducer = createReducer(
 
         return [...tareas, tarea];
       }, [] as Tarea[]),
+    })
+  ),
+  on(
+    resetState,
+    (): TareaState => ({
+      ...initialTareaState,
+    })
+  ),
+  on(
+    loadState,
+    (state, { stateLocalStorage }): TareaState => ({
+      ...stateLocalStorage.tareas,
     })
   )
 );

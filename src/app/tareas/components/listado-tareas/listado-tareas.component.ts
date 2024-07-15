@@ -20,7 +20,6 @@ export class ListadoTareasComponent implements OnInit {
   }
 
   completarTarea(idTarea: number): void {
-    console.log('entra completar tarea');
     this.emitCompletarTarea.emit(idTarea);
   }
 }

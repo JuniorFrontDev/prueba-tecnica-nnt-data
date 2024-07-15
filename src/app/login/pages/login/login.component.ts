@@ -10,6 +10,8 @@ import { USUARIO } from 'src/app/shared/consts/usuarioDefault';
 import { Rutas } from 'src/app/shared/enums/rutas.enum';
 import { AppFacade } from 'src/app/shared/facades/app.facade';
 import { CredencialesLogin } from 'src/app/shared/models/credencialesLogin.model';
+import { LocalStorageService } from 'src/app/shared/services/localStorage.service';
+import { State } from 'src/app/store/state/app.state';
 
 @Component({
   selector: 'app-login',
@@ -19,15 +21,24 @@ import { CredencialesLogin } from 'src/app/shared/models/credencialesLogin.model
 export class LoginComponent implements OnInit {
   form!: FormGroup;
   errorCredenciales: boolean = false;
+  state!: State;
 
   constructor(
     private fb: FormBuilder,
     private router: Router,
-    private appFacade: AppFacade
+    private appFacade: AppFacade,
+    private localStorageService: LocalStorageService
   ) {}
 
   ngOnInit(): void {
+    this.appFacade.resetState();
+    this.localStorageService.clearAll();
+    this.subscribeToState();
     this.crearFormulario();
+  }
+
+  subscribeToState(): void {
+    this.appFacade.state$.subscribe((state: State) => (this.state = state));
   }
 
   crearFormulario(): void {
@@ -63,6 +74,7 @@ export class LoginComponent implements OnInit {
       password: this.password.value,
     };
     this.appFacade.login(usuario);
+    this.localStorageService.setState(this.state, 'state');
     this.router.navigate([`/${Rutas.TAREAS}`]);
   }
 
