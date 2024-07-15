@@ -18,7 +18,6 @@ export class UsuarioGuard implements CanActivate {
     private localStorageService: LocalStorageService
   ) {
     const state = this.localStorageService.getState('state');
-    console.log(state);
     this.appFacade.loadState(state);
     this.subscribeToUsuario();
   }
